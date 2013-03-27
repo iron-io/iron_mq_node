@@ -15,7 +15,7 @@ class APIClient extends ironCore.Client
       host: @AWS_US_EAST_HOST,
       port: 443,
       api_version: 1,
-      user_agent: @version,
+      user_agent: version,
       queue_name: 'default'
 
     super('iron', 'mq', options, defaultOptions, ['project_id', 'token', 'api_version', 'queue_name'])

@@ -135,7 +135,7 @@ class Client
     )
 
   del_msg_push_status: (message_id, subscriber_id, cb) ->
-    @api.messagesDeletePushStatus(@api.options.queue_name, message_id, subscriber_id, (error, body) ->
+    @api.messagesPushStatusDelete(@api.options.queue_name, message_id, subscriber_id, (error, body) ->
       if not error?
         cb(error, body)
       else
