@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "description": "Node client for IronMQ",
   "homepage": "https://github.com/iron-io/iron_mq_node",
-  "author": "Andrew Kirilenko & Iron.io, Inc",
+  "author": "Andrew Kirilenko, Yury Yantsevich & Iron.io, Inc",
   "main": "./lib/client",
   "dependencies": {
     "pkginfo": "0.2.3",
@@ -11,7 +11,7 @@
     "iron_core": "0.2"
   },
   "devDependencies": {
-    "coffee-script": "1.3.3"
+    "coffee-script": "1.6.2"
   },
   "repository": {
     "type": "git",
