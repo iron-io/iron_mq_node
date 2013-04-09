@@ -49,7 +49,7 @@ imq.queues(options, callback(error, body) {});
 You can have as many queues as you want, each with their own unique set of messages.
 
 ```javascript
-imq.queue("my_queue", callback(error, body) {});
+var queue = imq.queue("my_queue");
 ```
 
 **Note:** if queue with desired name does not exist it returns fake queue.
@@ -190,8 +190,9 @@ queue.update(options, callback(error, body) {});
 This set of subscribers will replace the existing subscribers.
 To add or remove subscribers, see the add subscribers endpoint or the remove subscribers endpoint.
 See below for example json.
-* `push_type`: Either `multicast` to push to all subscribers or `unicast` to push to one and only one subscriber. Default is `multicast`.
-* `retries`: How many times to retry on failure. Default is 3.
+* `push_type`: Either `multicast` to push to all subscribers or `unicast` to push to one and only one subscriber.
+Default is `multicast`.
+* `retries`: How many times to retry on failure. Default is 3. Maximum is 100.
 * `retries_delay`: Delay between each retry in seconds. Default is 60.
 
 **Example:**
@@ -251,6 +252,15 @@ queue.del_msg_push_status(message_id, subscriber_id, callback(error, body) {});
 
 --
 
+### Revert Queue Back to Pull Queue
+
+If you want to revert you queue just update `push_type` to `"pull"`.
+
+```javascript
+queue.update({push_type: "pull"}, callback(error, body) {});
+```
+
+--
 
 ## Further Links
 
