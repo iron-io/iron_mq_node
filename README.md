@@ -25,9 +25,10 @@ var imq = new iron_mq.Client();
 Or pass in credentials:
 
 ```javascript
-var imq = new iron_mq.Client({token: "MY_TOKEN", project_id: "MY_PROJECT_ID"});
+var imq = new iron_mq.Client({token: "MY_TOKEN", project_id: "MY_PROJECT_ID", queue_name: "MY_QUEUE"});
 ```
 
+If no `queue_name` is specified it defaults to `default`.
 
 ## Usage
 
