@@ -150,7 +150,7 @@ Default is 0 seconds. Maximum is 604,800 seconds (7 days).
 ### Delete a Message from a Queue
 
 ```javascript
-queue.delete(message_id, callback(error, body) {});
+queue.del(message_id, callback(error, body) {});
 ```
 
 Be sure to delete a message from the queue when you're done with it.
