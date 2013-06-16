@@ -129,7 +129,7 @@ You have to explicitly delete the message or else it will go back onto the queue
 Touching a reserved message extends its timeout by the duration specified when the message was created, which is 60 seconds by default.
 
 ```javascript
-queue.touch(message_id, callback(error, body) {});
+queue.msg_touch(message_id, callback(error, body) {});
 ```
 
 --
@@ -137,7 +137,7 @@ queue.touch(message_id, callback(error, body) {});
 ### Release Message
 
 ```javascript
-queue.release(message_id, options, callback(error, body) {});
+queue.msg_release(message_id, options, callback(error, body) {});
 ```
 
 **Options:**
