@@ -87,6 +87,10 @@ queue.post(
 );
 ```
 
+**Required messages' parameters:**
+
+* `body`: The message body as a string. This does not jsonify objects.
+
 **Optional messages' parameters:**
 
 * `timeout`: After timeout (in seconds), item will be placed back onto queue.
