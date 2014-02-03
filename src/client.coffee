@@ -110,6 +110,14 @@ class Client
         cb(error, body)
     )
 
+  msg_get: (message_id, cb) ->
+    @api.messagesGetById(@api.options.queue_name, message_id, (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
   msg_touch: (message_id, cb) ->
     @api.messagesTouch(@api.options.queue_name, message_id, (error, body) ->
       if not error?

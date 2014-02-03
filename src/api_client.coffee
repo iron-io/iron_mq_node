@@ -92,6 +92,13 @@ class APIClient extends ironCore.Client
       parseResponseBind(error, response, body, cb)
     )
 
+  messagesGetById: (queue_name, message_id, cb) ->
+    parseResponseBind = _.bind(@parseResponse, @)
+        
+    @get("/#{queue_name}/messages/#{message_id}", {}, (error, response, body) ->
+      parseResponseBind(error, response, body, cb)
+    )
+
   messagesDelete: (queue_name, message_id, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
 
