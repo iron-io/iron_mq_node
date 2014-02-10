@@ -45,22 +45,28 @@ class Client
     unless subscribers instanceof Array
       subscribers = [subscribers]
 
-    @api.queuesAddSubscribers(@api.options.queue_name, subscribers, (error, body) ->
-      if not error?
-        cb(error, body)
-      else
-        cb(error, body)
+    @api.queuesAddSubscribers(
+      @api.options.queue_name,
+      { subscribers: subscribers },
+      (error, body) ->
+        if not error?
+          cb(error, body)
+        else
+          cb(error, body)
     )
 
   rm_subscribers: (subscribers, cb) ->
     unless subscribers instanceof Array
       subscribers = [subscribers]
 
-    @api.queuesRemoveSubscribers(@api.options.queue_name, subscribers, (error, body) ->
-      if not error?
-        cb(error, body)
-      else
-        cb(error, body)
+    @api.queuesRemoveSubscribers(
+      @api.options.queue_name,
+      { subscribers: subscribers },
+      (error, body) ->
+        if not error?
+          cb(error, body)
+        else
+          cb(error, body)
     )
 
   del_queue: (cb) ->
