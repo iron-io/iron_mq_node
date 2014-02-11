@@ -116,6 +116,14 @@ class Client
         cb(error, body)
     )
 
+  del_multiple: (messages, cb) ->
+    @api.messagesMultipleDelete(@api.options.queue_name, messages, (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
   msg_get: (message_id, cb) ->
     @api.messagesGetById(@api.options.queue_name, message_id, (error, body) ->
       if not error?
