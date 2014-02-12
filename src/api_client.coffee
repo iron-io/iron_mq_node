@@ -106,10 +106,10 @@ class APIClient extends ironCore.Client
       parseResponseBind(error, response, body, cb)
     )
 
-  messagesMultipleDelete: (queue_name, messages, cb) ->
+  messagesMultipleDelete: (queue_name, messages_ids, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
 
-    @delete("/#{queue_name}/messages", {ids: messages}, (error, response, body) ->
+    @delete("/#{queue_name}/messages", {ids: messages_ids}, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
