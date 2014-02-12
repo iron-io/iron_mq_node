@@ -110,6 +110,8 @@ Default is 604,800 seconds (7 days). Maximum is 2,592,000 seconds (30 days).
 
 ```javascript
 queue.get(options, callback(error, body) {});
+
+queue.get_n(options, callback(error, body) {});
 ```
 
 **Options:**
@@ -121,8 +123,9 @@ You must delete the message from the queue to ensure it does not go back onto th
 If not set, value from POST is used. Default is 60 seconds. Minimum is 30 seconds.
 Maximum is 86,400 seconds (24 hours).
 
-When `n` parameter is specified and greater than 1 method returns list of messages.
-Otherwise, message's object will be returned.
+In `get` function when `n` parameter is specified and greater than 1 method returns list of messages.
+Otherwise, message's object will be returned. `get_n` function returns `Array` of messages even if `n` option
+is set to 1 or omitted.
 
 When you pop/get a message from the queue, it is no longer on the queue but it still exists within the system.
 You have to explicitly delete the message or else it will go back onto the queue after the `timeout`.
@@ -134,6 +137,26 @@ You have to explicitly delete the message or else it will go back onto the queue
 ```javascript
 queue.msg_get(message_id, callback(error, body) {});
 ```
+
+--
+
+### Peek Messages on a Queue
+
+Peeking at a queue returns the next messages on the queue, but it does not reserve them.
+
+```javascript
+queue.peek(options, callback(error, body) {});
+
+queue.peek_n(options, callback(error, body) {});
+```
+
+**Options:**
+
+* `n`: The maximum number of messages to peek. Default is 1. Maximum is 100.
+
+In `peek` function when `n` parameter is specified and greater than 1 method returns list of messages.
+Otherwise, message's object will be returned. `peek_n` function returns `Array` of messages even if `n` option
+is set to 1 or omitted.
 
 --
 
