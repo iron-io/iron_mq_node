@@ -93,23 +93,47 @@ class Client
     )
 
   get: (options, cb) ->
+    @get_n(options, (error, body) ->
+      if not error?
+        cb(error, if (not options.n?) or options.n == 1 then body[0] else body)
+      else
+        cb(error, body)
+    )
+
+  get_n: (options, cb) ->
     @api.messagesGet(@api.options.queue_name, options, (error, body) ->
       if not error?
-        cb(error, if (not options.n?) or options.n == 1 then body.messages[0] else body.messages)
+        cb(error, body.messages)
       else
         cb(error, body)
     )
 
   peek: (options, cb) ->
+    @peek_n(options, (error, body) ->
+      if not error?
+        cb(error, if (not options.n?) or options.n == 1 then body[0] else body)
+      else
+        cb(error, body)
+    )
+
+  peek_n: (options, cb) ->
     @api.messagesPeek(@api.options.queue_name, options, (error, body) ->
       if not error?
-        cb(error, if (not options.n?) or options.n == 1 then body.messages[0] else body.messages)
+        cb(error, body.messages)
       else
         cb(error, body)
     )
 
   del: (message_id, cb) ->
     @api.messagesDelete(@api.options.queue_name, message_id, (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
+  del_multiple: (messages_ids, cb) ->
+    @api.messagesMultipleDelete(@api.options.queue_name, messages_ids, (error, body) ->
       if not error?
         cb(error, body)
       else
