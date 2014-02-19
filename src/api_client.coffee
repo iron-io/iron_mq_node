@@ -57,6 +57,34 @@ class APIClient extends ironCore.Client
       parseResponseBind(error, response, body, cb)
     )
 
+  queuesAddAlerts: (queue_name, alerts, cb) ->
+    parseResponseBind = _.bind(@parseResponse, @)
+
+    @post("/#{queue_name}/alerts", alerts, (error, response, body) ->
+      parseResponseBind(error, response, body, cb)
+    )
+
+  queuesUpdateAlerts: (queue_name, alerts, cb) ->
+    parseResponseBind = _.bind(@parseResponse, @)
+
+    @put("/#{queue_name}/alerts", alerts, (error, response, body) ->
+      parseResponseBind(error, response, body, cb)
+    )
+
+  queuesDeleteAlerts: (queue_name, alerts, cb) ->
+    parseResponseBind = _.bind(@parseResponse, @)
+
+    @delete("/#{queue_name}/alerts", alerts, (error, response, body) ->
+      parseResponseBind(error, response, body, cb)
+    )
+
+  queuesDeleteAlertById: (queue_name, alert_id, cb) ->
+    parseResponseBind = _.bind(@parseResponse, @)
+
+    @delete("/#{queue_name}/alerts/#{alert_id}", {}, (error, response, body) ->
+      parseResponseBind(error, response, body, cb)
+    )
+
   queuesAddSubscribers: (queue_name, subscribers, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
 

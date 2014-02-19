@@ -247,6 +247,75 @@ queue.rm_subscribers(
 
 --
 
+### Add alerts to a queue. This is for Pull Queue only.
+
+```javascript
+queue.add_alerts(
+              [
+                  {
+                      type: 'fixed',
+                      direction: 'asc',
+                      trigger: 201,
+                      queue: 'my_queue_for_alerts',
+                      snooze: 11
+                  },{
+                      type: 'fixed',
+                      direction: 'desc',
+                      trigger: 202,
+                      queue: 'my_queue_for_alerts',
+                      snooze: 12
+                  }
+              ],
+              callback(error, body) {}
+          );
+```
+
+### Replace current queue alerts with a given list of alerts. This is for Pull Queue only.
+
+```javascript
+queue.update_alerts(
+              [
+                  {
+                      type: 'fixed',
+                      direction: 'asc',
+                      trigger: 211,
+                      queue: 'my_queue_for_alerts',
+                      snooze: 20
+                  },{
+                      type: 'fixed',
+                      direction: 'desc',
+                      trigger: 212,
+                      queue: 'my_queue_for_alerts',
+                      snooze: 21
+                  }
+              ],
+              callback(error, body) {}
+          );
+```
+
+### Remove alerts from a queue. This is for Pull Queue only.
+
+```javascript
+queue.delete_alerts(
+          [
+              {
+                 id: 'xxxxxxxxxxxxxxxxxx1'
+              },
+              {
+                  id: 'xxxxxxxxxxxxxxxxxx2'
+              },
+          ],
+          callback(error, body) {} );
+```
+
+### Remove alert from a queue by its ID. This is for Pull Queue only.
+
+```javascript
+queue.delete_alert_by_id(alert_id, callback(error, body) {});
+```
+
+--
+
 ### Get Message Push Status
 
 After pushing a message:
