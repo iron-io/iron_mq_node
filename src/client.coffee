@@ -41,6 +41,55 @@ class Client
         cb(error, body)
     )
 
+  add_alerts: (alerts, cb) ->
+    unless alerts instanceof Array
+      alerts = [alerts]
+
+    @api.queuesAddAlerts(
+      @api.options.queue_name,
+    { alerts: alerts },
+    (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+  update_alerts: (alerts, cb) ->
+    unless alerts instanceof Array
+      alerts = [alerts]
+
+    @api.queuesUpdateAlerts(
+      @api.options.queue_name,
+    { alerts: alerts },
+    (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
+  delete_alerts: (alerts, cb) ->
+    unless alerts instanceof Array
+      alerts = [alerts]
+
+    @api.queuesDeleteAlerts(
+      @api.options.queue_name,
+    { alerts: alerts },
+    (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
+  delete_alert_by_id: (alert_id, cb) ->
+    @api.queuesDeleteAlertById(@api.options.queue_name, alert_id, (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
   add_subscribers: (subscribers, cb) ->
     unless subscribers instanceof Array
       subscribers = [subscribers]
@@ -110,6 +159,14 @@ class Client
 
   del: (message_id, cb) ->
     @api.messagesDelete(@api.options.queue_name, message_id, (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
+  del_multiple: (messages, cb) ->
+    @api.messagesMultipleDelete(@api.options.queue_name, messages, (error, body) ->
       if not error?
         cb(error, body)
       else
