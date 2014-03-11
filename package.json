@@ -1,6 +1,6 @@
 {
   "name": "iron_mq",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Node client for IronMQ",
   "homepage": "https://github.com/iron-io/iron_mq_node",
   "author": "Andrew Kirilenko, Yury Yantsevich & Iron.io, Inc",
