@@ -35,7 +35,7 @@ If no `queue_name` is specified it defaults to `default`.
 ### Get Queues List
 
 ```javascript
-imq.queues(options, callback(error, body) {});
+imq.queues(options, function(error, body) {});
 ```
 
 **Options:**
@@ -61,7 +61,7 @@ Queue will be created automatically on post of first message or queue configurat
 ### Retrieve Queue Information
 
 ```javascript
-queue.info(callback(error, body) {});
+queue.info(function(error, body) {});
 ```
 
 --
@@ -72,19 +72,19 @@ Messages are placed on the queue in a FIFO arrangement.
 If a queue does not exist, it will be created upon the first posting of a message.
 
 ```javascript
-queue.post(messages, callback(error, body) {});
+queue.post(messages, function(error, body) {});
 
 // single message
-queue.post("hello IronMQ!", callback(error, body) {});
+queue.post("hello IronMQ!", function(error, body) {});
 // with options
-queue.post({body: "hello IronMQ", delay: 30}, callback(error, body) {});
+queue.post({body: "hello IronMQ", delay: 30}, function(error, body) {});
 // or multiple messages
-queue.post(["hello", "IronMQ"], callback(error, body) {});
+queue.post(["hello", "IronMQ"], function(error, body) {});
 // messages with options
 queue.post(
   [{body: "hello", timeout: 40},
    {body: "IronMQ", timeout: 80}],
-  callback(error, body) {}
+  function(error, body) {}
 );
 ```
 
@@ -109,9 +109,9 @@ Default is 604,800 seconds (7 days). Maximum is 2,592,000 seconds (30 days).
 ### Get a Messages off a Queue
 
 ```javascript
-queue.get(options, callback(error, body) {});
+queue.get(options, function(error, body) {});
 
-queue.get_n(options, callback(error, body) {});
+queue.get_n(options, function(error, body) {});
 ```
 
 **Options:**
@@ -135,7 +135,7 @@ You have to explicitly delete the message or else it will go back onto the queue
 ### Get a Messages off a Queue by Message ID
 
 ```javascript
-queue.msg_get(message_id, callback(error, body) {});
+queue.msg_get(message_id, function(error, body) {});
 ```
 
 --
@@ -145,9 +145,9 @@ queue.msg_get(message_id, callback(error, body) {});
 Peeking at a queue returns the next messages on the queue, but it does not reserve them.
 
 ```javascript
-queue.peek(options, callback(error, body) {});
+queue.peek(options, function(error, body) {});
 
-queue.peek_n(options, callback(error, body) {});
+queue.peek_n(options, function(error, body) {});
 ```
 
 **Options:**
@@ -165,7 +165,7 @@ is set to 1 or omitted.
 Touching a reserved message extends its timeout by the duration specified when the message was created, which is 60 seconds by default.
 
 ```javascript
-queue.msg_touch(message_id, callback(error, body) {});
+queue.msg_touch(message_id, function(error, body) {});
 ```
 
 --
@@ -173,7 +173,7 @@ queue.msg_touch(message_id, callback(error, body) {});
 ### Release Message
 
 ```javascript
-queue.msg_release(message_id, options, callback(error, body) {});
+queue.msg_release(message_id, options, function(error, body) {});
 ```
 
 **Options:**
@@ -186,7 +186,7 @@ Default is 0 seconds. Maximum is 604,800 seconds (7 days).
 ### Delete a Message from a Queue
 
 ```javascript
-queue.del(message_id, callback(error, body) {});
+queue.del(message_id, function(error, body) {});
 ```
 
 Be sure to delete a message from the queue when you're done with it.
@@ -196,7 +196,7 @@ Be sure to delete a message from the queue when you're done with it.
 ### Clear a Queue
 
 ```javascript
-queue.clear(callback(error, body) {});
+queue.clear(function(error, body) {});
 ```
 
 --
@@ -204,7 +204,7 @@ queue.clear(callback(error, body) {});
 ### Delete a Message Queue
 
 ```javascript
-queue.del_queue(callback(error, body) {});
+queue.del_queue(function(error, body) {});
 ```
 
 --
@@ -217,7 +217,7 @@ IronMQ push queues allow you to setup a queue that will push to an endpoint, rat
 ### Update a Message Queue
 
 ```javascript
-queue.update(options, callback(error, body) {});
+queue.update(options, function(error, body) {});
 ```
 
 **The following options are all related to Push Queues:**
@@ -241,7 +241,7 @@ queue.update(
      {url: "http://my.first.end.point/push"},
      {url: "http://my.second.end.point/push"}
    ]},
-  callback(error, body) {}
+  function(error, body) {}
 );
 ```
 
@@ -250,21 +250,21 @@ queue.update(
 ### Add/Remove Subscribers on a Queue
 
 ```javascript
-queue.add_subscribers({url:  "http://nowhere.com"}, callback(error, body) {});
+queue.add_subscribers({url:  "http://nowhere.com"}, function(error, body) {});
 
 queue.add_subscribers(
   [{url: 'http://first.endpoint.xx/process'},
    {url: 'http://second.endpoint.xx/process'}],
-  callback(error, body) {}
+  function(error, body) {}
 );
 
 
-queue.rm_subscribers({url: "http://nowhere.com"}, callback(error, body) {});
+queue.rm_subscribers({url: "http://nowhere.com"}, function(error, body) {});
 
 queue.rm_subscribers(
   [{url: 'http://first.endpoint.xx/process'},
    {url: 'http://second.endpoint.xx/process'}],
-  callback(error, body) {}
+  function(error, body) {}
 );
 ```
 
@@ -289,7 +289,7 @@ queue.add_alerts(
                       snooze: 12
                   }
               ],
-              callback(error, body) {}
+              function(error, body) {}
           );
 ```
 
@@ -312,7 +312,7 @@ queue.update_alerts(
                       snooze: 21
                   }
               ],
-              callback(error, body) {}
+              function(error, body) {}
           );
 ```
 
@@ -328,13 +328,13 @@ queue.delete_alerts(
                   id: 'xxxxxxxxxxxxxxxxxx2'
               },
           ],
-          callback(error, body) {} );
+          function(error, body) {} );
 ```
 
 ### Remove alert from a queue by its ID. This is for Pull Queue only.
 
 ```javascript
-queue.delete_alert_by_id(alert_id, callback(error, body) {});
+queue.delete_alert_by_id(alert_id, function(error, body) {});
 ```
 
 --
@@ -344,7 +344,7 @@ queue.delete_alert_by_id(alert_id, callback(error, body) {});
 After pushing a message:
 
 ```javascript
-queue.msg_push_statuses(message_id, callback(error, body) {});
+queue.msg_push_statuses(message_id, function(error, body) {});
 ```
 
 --
@@ -352,7 +352,7 @@ queue.msg_push_statuses(message_id, callback(error, body) {});
 ### Acknowledge / Delete Message Push Status
 
 ```javascript
-queue.del_msg_push_status(message_id, subscriber_id, callback(error, body) {});
+queue.del_msg_push_status(message_id, subscriber_id, function(error, body) {});
 ```
 
 --
@@ -362,7 +362,7 @@ queue.del_msg_push_status(message_id, subscriber_id, callback(error, body) {});
 If you want to revert you queue just update `push_type` to `"pull"`.
 
 ```javascript
-queue.update({push_type: "pull"}, callback(error, body) {});
+queue.update({push_type: "pull"}, function(error, body) {});
 ```
 
 --
