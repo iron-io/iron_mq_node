@@ -7,7 +7,7 @@ much as possible so if you see an option in the API docs, you can use it in the 
 
 ## Getting Started
 
-1\. Install the gem:
+1\. Install the node module:
 
 ```
 npm install iron_mq
