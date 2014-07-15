@@ -14,7 +14,7 @@ class APIClient extends ironCore.Client
       scheme: 'https',
       host: @AWS_US_EAST_HOST,
       port: 443,
-      api_version: 1,
+      api_version: 3,
       user_agent: version,
       queue_name: 'default'
 
@@ -33,20 +33,22 @@ class APIClient extends ironCore.Client
     parseResponseBind = _.bind(@parseResponse, @)
         
     @get("", options, (error, response, body) ->
-      parseResponseBind(error, response, body, cb)
+      body = JSON.parse(body)
+      parseResponseBind(error, response, body['queues'], cb)
     )
 
   queuesGet: (queue_name, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
         
     @get("/#{queue_name}", {}, (error, response, body) ->
-      parseResponseBind(error, response, body, cb)
+      body = JSON.parse(body)
+      parseResponseBind(error, response, body['queue'], cb)
     )
 
   queuesClear: (queue_name, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
-        
-    @post("/#{queue_name}/clear", {}, (error, response, body) ->
+
+    @delete("/#{queue_name}/messages", {}, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
@@ -116,7 +118,7 @@ class APIClient extends ironCore.Client
   messagesGet: (queue_name, options, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
         
-    @get("/#{queue_name}/messages", options, (error, response, body) ->
+    @post("/#{queue_name}/reservations", options, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
@@ -124,41 +126,45 @@ class APIClient extends ironCore.Client
     parseResponseBind = _.bind(@parseResponse, @)
         
     @get("/#{queue_name}/messages/#{message_id}", {}, (error, response, body) ->
+      body = JSON.parse(body)
+      parseResponseBind(error, response, body['message'], cb)
+    )
+
+  messagesDelete: (queue_name, options, cb) ->
+    body = _.pick(options, 'reservation_id')
+    parseResponseBind = _.bind(@parseResponse, @)
+
+    @delete("/#{queue_name}/messages/#{message_id}", body, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
-  messagesDelete: (queue_name, message_id, cb) ->
+  messagesMultipleDelete: (queue_name, options, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
 
-    @delete("/#{queue_name}/messages/#{message_id}", {}, (error, response, body) ->
-      parseResponseBind(error, response, body, cb)
-    )
-
-  messagesMultipleDelete: (queue_name, messages_ids, cb) ->
-    parseResponseBind = _.bind(@parseResponse, @)
-
-    @delete("/#{queue_name}/messages", {ids: messages_ids}, (error, response, body) ->
+    @delete("/#{queue_name}/messages", options, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
   messagesPeek: (queue_name, options, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
 
-    @get("/#{queue_name}/messages/peek", options, (error, response, body) ->
+    @get("/#{queue_name}/messages", options, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
   messagesTouch: (queue_name, message_id, cb) ->
+    body = _.pick(options, 'reservation_id')
     parseResponseBind = _.bind(@parseResponse, @)
 
-    @post("/#{queue_name}/messages/#{message_id}/touch", {}, (error, response, body) ->
+    @post("/#{queue_name}/messages/#{options.message_id}/touch", body, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
   messagesRelease: (queue_name, message_id, options, cb) ->
+    body = _.pick(options, 'reservation_id', 'delay')
     parseResponseBind = _.bind(@parseResponse, @)
 
-    @post("/#{queue_name}/messages/#{message_id}/release", options, (error, response, body) ->
+    @post("/#{queue_name}/messages/#{options.message_id}/release", body, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 

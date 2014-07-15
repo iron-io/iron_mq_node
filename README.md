@@ -106,12 +106,10 @@ Default is 604,800 seconds (7 days). Maximum is 2,592,000 seconds (30 days).
 
 --
 
-### Get a Messages off a Queue
+### Reserve/Get Messages from a Queue
 
 ```javascript
-queue.get(options, function(error, body) {});
-
-queue.get_n(options, function(error, body) {});
+queue.reserve(options, function(error, body) {});
 ```
 
 **Options:**
@@ -123,11 +121,10 @@ You must delete the message from the queue to ensure it does not go back onto th
 If not set, value from POST is used. Default is 60 seconds. Minimum is 30 seconds.
 Maximum is 86,400 seconds (24 hours).
 
-In `get` function when `n` parameter is specified and greater than 1 method returns list of messages.
-Otherwise, message's object will be returned. `get_n` function returns `Array` of messages even if `n` option
-is set to 1 or omitted.
+In `reserve` function when `n` parameter is specified and greater than 1 method returns list of messages.
+Otherwise, message's object will be returned. 
 
-When you pop/get a message from the queue, it is no longer on the queue but it still exists within the system.
+When you pop/reserve a message from the queue, it is no longer on the queue but it still exists within the system.
 You have to explicitly delete the message or else it will go back onto the queue after the `timeout`.
 
 --
@@ -165,7 +162,7 @@ is set to 1 or omitted.
 Touching a reserved message extends its timeout by the duration specified when the message was created, which is 60 seconds by default.
 
 ```javascript
-queue.msg_touch(message_id, function(error, body) {});
+queue.msg_touch({message_id: "xxxxxxx", reservation_id: "xxxxxxx"}, function(error, body) {});
 ```
 
 --
@@ -173,7 +170,7 @@ queue.msg_touch(message_id, function(error, body) {});
 ### Release Message
 
 ```javascript
-queue.msg_release(message_id, options, function(error, body) {});
+queue.msg_release({message_id: "xxxxxxx", reservation_id: "xxxxxxx", delay: 4600}, function(error, body) {});
 ```
 
 **Options:**
@@ -186,10 +183,29 @@ Default is 0 seconds. Maximum is 604,800 seconds (7 days).
 ### Delete a Message from a Queue
 
 ```javascript
-queue.del(message_id, function(error, body) {});
+queue.del({message_id: 'xxxxxxxxx'}, function(error, body) {});
 ```
 
 Be sure to delete a message from the queue when you're done with it.
+
+```javascript
+queue.del({message_id: 'xxxxxxxxx', reservation_id: 'xxxxxxxxx'}, function(error, body) {});
+```
+
+To delete reserved message `reservation_id` should be passed to the method. 
+
+--
+
+### Delete multiple messages from a Queue after reserving or posting
+
+```javascript
+queue.reserve({n:3}, function(error, messages) {
+   queue.del_multiple({reservation_ids: messages}, function(error,body){});
+});
+queue.post(["hello", "IronMQ"], function(error, ids) {
+   queue.del_multiple({ids: ids}, function(error,body){});
+});
+```
 
 --
 
