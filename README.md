@@ -162,7 +162,8 @@ is set to 1 or omitted.
 Touching a reserved message extends its timeout by the duration specified when the message was created, which is 60 seconds by default.
 
 ```javascript
-queue.msg_touch({message_id: "xxxxxxx", reservation_id: "xxxxxxx"}, function(error, body) {});
+var options = {message_id: "xxxxxxx", reservation_id: "xxxxxxx"};
+queue.msg_touch(options, function(error, body) {});
 ```
 
 --
@@ -170,7 +171,8 @@ queue.msg_touch({message_id: "xxxxxxx", reservation_id: "xxxxxxx"}, function(err
 ### Release Message
 
 ```javascript
-queue.msg_release({message_id: "xxxxxxx", reservation_id: "xxxxxxx", delay: 4600}, function(error, body) {});
+var options = {message_id: "xxxxxxx", reservation_id: "xxxxxxx", delay: 4600};
+queue.msg_release(options, function(error, body) {});
 ```
 
 **Options:**
@@ -189,14 +191,15 @@ queue.del({message_id: 'xxxxxxxxx'}, function(error, body) {});
 Be sure to delete a message from the queue when you're done with it.
 
 ```javascript
-queue.del({message_id: 'xxxxxxxxx', reservation_id: 'xxxxxxxxx'}, function(error, body) {});
+var options = {message_id: 'xxxxxxxxx', reservation_id: 'xxxxxxxxx'};
+queue.del(options, function(error, body) {});
 ```
 
 To delete reserved message `reservation_id` should be passed to the method. 
 
 --
 
-### Delete multiple messages from a Queue after reserving or posting
+Delete multiple messages from a Queue after reserving or posting
 
 ```javascript
 queue.reserve({n:3}, function(error, messages) {
