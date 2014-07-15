@@ -40,8 +40,10 @@ imq.queues(options, function(error, body) {});
 
 **Options:**
 
-* `page`: The 0-based page to view. The default is 0.
-* `per_page`: The number of queues to return per page. The default is 30, the maximum is 100.
+* `per_page` - number of elements in response. The default is 30, the maximum is 100.
+* `previous` - this is the last queue on the previous page, it will start from the next one. If queue with specified 
+               name doesn’t exist result will contain first per_page queues that lexicographically greater than previous
+* `prefix` - an optional queue prefix to search on. e.g., `prefix=ca` could return queues `["cars", "cats", etc.]`
 
 --
 
