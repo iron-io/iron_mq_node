@@ -274,8 +274,8 @@ queue.update(
 queue.add_subscribers({url:  "http://nowhere.com"}, function(error, body) {});
 
 queue.add_subscribers(
-  [{url: 'http://first.endpoint.xx/process'},
-   {url: 'http://second.endpoint.xx/process'}],
+  ['http://first.endpoint.xx/process',
+   'http://second.endpoint.xx/process'],
   function(error, body) {}
 );
 

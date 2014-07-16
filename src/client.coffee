@@ -62,16 +62,25 @@ class Client
   add_alerts: (alerts, cb) ->
     unless alerts instanceof Array
       alerts = [alerts]
+    options = {queue: {alerts: alerts}}
 
-    @api.queuesAddAlerts(
-      @api.options.queue_name,
-    { alerts: alerts },
-    (error, body) ->
+    @api.queuesUpdate(@api.options.queue_name, options, (error, body) ->
       if not error?
         cb(error, body)
       else
         cb(error, body)
     )
+
+  clear_alerts: (cb) ->
+    options = {queue: {alerts: [{}]}}
+
+    @api.queuesUpdate(@api.options.queue_name, options, (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
   update_alerts: (alerts, cb) ->
     unless alerts instanceof Array
       alerts = [alerts]
@@ -112,10 +121,21 @@ class Client
     unless subscribers instanceof Array
       subscribers = [subscribers]
 
-    @api.queuesAddSubscribers(
-      @api.options.queue_name,
-      { subscribers: subscribers },
-      (error, body) ->
+    values = prepareSubscribers(subscribers)
+    options = {queue: {push: {subscribers: values }}}
+
+    @api.queuesUpdate(
+      @api.options.queue_name, options, (error, body) ->
+        if not error?
+          cb(error, body)
+        else
+          cb(error, body)
+    )
+
+  clear_subscribers: (cb) ->
+    options = {queue: {push: {subscribers: [{}] }}}
+    @api.queuesUpdate(
+      @api.options.queue_name, options, (error, body) ->
         if not error?
           cb(error, body)
         else
