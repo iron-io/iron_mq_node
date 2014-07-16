@@ -52,10 +52,17 @@ class APIClient extends ironCore.Client
       parseResponseBind(error, response, body, cb)
     )
 
+  queuesCreate: (queue_name, options, cb) ->
+    parseResponseBind = _.bind(@parseResponse, @)
+
+    @put("/#{queue_name}", options, (error, response, body) ->
+      parseResponseBind(error, response, body, cb)
+    )
+
   queuesUpdate: (queue_name, options, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
 
-    @post("/#{queue_name}", options, (error, response, body) ->
+    @patch("/#{queue_name}", options, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
