@@ -9,6 +9,24 @@ class Client
   queue: (name) ->
     new Client(_.extend({}, @api.options, {queue_name: name}))
 
+  create_queue: (queue_name, options, cb) ->
+    options = prepareQueueOptions(options)
+    @api.queuesCreate(queue_name, options, (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
+  update_queue: (queue_name, options, cb) ->
+    options = prepareQueueOptions(options)
+    @api.queuesUpdate(queue_name, options, (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
   queues: (options, cb) ->
     @api.queuesList(options, (error, body) ->
       if not error?
@@ -239,6 +257,26 @@ class Client
         cb(error, body)
     )
 
+  prepareQueueOptions = (options) ->
+    body = {}
+    if options['message_timeout']
+       body['message_timeout'] = options['message_timeout']
+    if options['message_expiration']
+       body['message_expiration'] = options['message_expiration']
+    if options['type']
+       body['type'] = options['type']
+    if options['alerts']
+       body['alerts'] = options['alerts']
+    push = {}
+    if options['error_queue']
+       push['error_queue'] = options['error_queue']
+    if options['subscribers']
+       push['subscribers'] = prepareSubscribers(options['subscribers'])
+    if not _.isEmpty(push)
+       body['push'] = push
+    queue = {queue: body}
+    queue
+
   prepareIdsToRemove = (options) ->
     body = {}
     if options["ids"]
@@ -246,5 +284,9 @@ class Client
     else if options["reservation_ids"]
       body["ids"] = _.map(options["reservation_ids"], (val) -> {id: val.id, reservation_id: val.reservation_id})
     body
+
+  prepareSubscribers = (subscribers) ->
+    values = _.map(subscribers, (val) -> {url: val})
+    values
 
 module.exports.Client = Client
