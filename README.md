@@ -235,6 +235,20 @@ queue.del_queue(function(error, body) {});
 IronMQ push queues allow you to setup a queue that will push to an endpoint, rather than having to poll the endpoint. 
 [Here's the announcement for an overview](http://blog.iron.io/2013/01/ironmq-push-queues-reliable-message.html). 
 
+### Create a Push Queue
+
+Push queues must be explicitly created. There's no changing a queue's type.
+type can be one of: `[multicast, unicast, pull]` where `multicast` and `unicast` define push queues, default is `pull`.
+If push field is defined, this queue will be created as a push queue and must contain at least one subscriber. Everything else in the push map is optional.
+A push queue cannot have alerts.
+All fields are optional.
+
+```javascript
+subscribers=["http://endpoint1.com", "https://end.point.com/2"]
+options = {message_timeout: 60, message_expiration: 3600, type: "unicast", subscribers: subscribers}
+imq.create_queue(options, function(error, body) {})
+```
+
 ### Update a Message Queue
 
 ```javascript
@@ -247,8 +261,6 @@ queue.update(options, function(error, body) {});
 This set of subscribers will replace the existing subscribers.
 To add or remove subscribers, see the add subscribers endpoint or the remove subscribers endpoint.
 See below for example json.
-* `push_type`: Either `multicast` to push to all subscribers or `unicast` to push to one and only one subscriber.
-Default is `multicast`.
 * `retries`: How many times to retry on failure. Default is 3. Maximum is 100.
 * `retries_delay`: Delay between each retry in seconds. Default is 60.
 
