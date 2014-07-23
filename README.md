@@ -238,9 +238,13 @@ IronMQ push queues allow you to setup a queue that will push to an endpoint, rat
 ### Create a Push Queue
 
 Push queues must be explicitly created. There's no changing a queue's type.
-type can be one of: `[multicast, unicast, pull]` where `multicast` and `unicast` define push queues, default is `pull`.
-If push field is defined, this queue will be created as a push queue and must contain at least one subscriber. Everything else in the push map is optional.
+
+`type` can be one of: `[multicast, unicast, pull]` where `multicast` and `unicast` define push queues, default is `pull`.
+
+If `push` field is defined, this queue will be created as a push queue and must contain at least one subscriber. Everything else in the push map is optional.
+
 A push queue cannot have alerts.
+
 All fields are optional.
 
 ```javascript
