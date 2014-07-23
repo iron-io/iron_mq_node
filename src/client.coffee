@@ -52,6 +52,7 @@ class Client
     )
 
   update: (options, cb) ->
+    options = prepareQueueOptions(options)
     @api.queuesUpdate(@api.options.queue_name, options, (error, body) ->
       if not error?
         cb(error, body)
