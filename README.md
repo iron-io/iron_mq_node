@@ -279,6 +279,8 @@ See below for example json.
 
 ### Update a Message Queue
 
+Same as create queue
+
 ```javascript
 queue.update(options, function(error, body) {});
 ```
