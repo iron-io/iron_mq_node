@@ -283,29 +283,6 @@ See below for example json.
 queue.update(options, function(error, body) {});
 ```
 
-**The following options are all related to Push Queues:**
-
-* `subscribers`: An array of subscriber hashes containing a “url” field.
-This set of subscribers will replace the existing subscribers.
-To add or remove subscribers, see the add subscribers endpoint or the remove subscribers endpoint.
-See below for example json.
-* `retries`: How many times to retry on failure. Default is 3. Maximum is 100.
-* `retries_delay`: Delay between each retry in seconds. Default is 60.
-
-**Example:**
-
-```javascript
-queue.update(
-  {push_type: "multicast",
-   retries: 5,
-   subscribers: [
-     {url: "http://my.first.end.point/push"},
-     {url: "http://my.second.end.point/push"}
-   ]},
-  function(error, body) {}
-);
-```
-
 --
 
 ### Add/Remove Subscribers on a Queue
