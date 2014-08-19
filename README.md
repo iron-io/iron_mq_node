@@ -275,7 +275,7 @@ See below for example json.
 * `push: retries`: How many times to retry on failure. Default is 3. Maximum is 100.
 * `push: retries_delay`: Delay between each retry in seconds. Default is 60.
 * `push: error_queue`: String. Queue name to post push errors to.
-```
+
 
 ### Update a Message Queue
 
