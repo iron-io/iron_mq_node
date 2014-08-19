@@ -119,25 +119,14 @@ class Client
     unless subscribers instanceof Array
       subscribers = [subscribers]
 
-    values = prepareSubscribers(subscribers)
-    options = {queue: {push: {subscribers: values }}}
-
-    @api.queuesUpdate(
-      @api.options.queue_name, options, (error, body) ->
-        if not error?
-          cb(error, body)
-        else
-          cb(error, body)
-    )
-
-  clear_subscribers: (cb) ->
-    options = {queue: {push: {subscribers: [{}] }}}
-    @api.queuesUpdate(
-      @api.options.queue_name, options, (error, body) ->
-        if not error?
-          cb(error, body)
-        else
-          cb(error, body)
+    @api.queuesAddSubscribers(
+      @api.options.queue_name,
+      { subscribers: subscribers },
+    (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
     )
 
   rm_subscribers: (subscribers, cb) ->
@@ -147,6 +136,20 @@ class Client
     @api.queuesRemoveSubscribers(
       @api.options.queue_name,
       { subscribers: subscribers },
+    (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
+  rpl_subscribers: (subscribers, cb) ->
+    unless subscribers instanceof Array
+      subscribers = [subscribers]
+
+    @api.queuesReplaceSubscribers(
+      @api.options.queue_name,
+      {subscribers: subscribers},
       (error, body) ->
         if not error?
           cb(error, body)
@@ -165,7 +168,7 @@ class Client
   post: (messages, cb) ->
     unless messages instanceof Array
       messages = [messages]
-      
+
     messages = _.map(messages, (message) ->
       if typeof(message) == 'string' then {body: message} else message
     )

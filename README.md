@@ -290,22 +290,45 @@ queue.update(options, function(error, body) {});
 ### Add/Remove Subscribers on a Queue
 
 ```javascript
-queue.add_subscribers({url:  "http://nowhere.com"}, function(error, body) {});
+var subscribers = [
+    {
+        'name': 'first',
+        'url': 'http://first.endpoint.xx/process',
+        'headers': {
+            'Content-Type': 'application/json'
+        }
+    },
+    {
+        'name': 'second',
+        'url': 'http://second.endpoint.xx/process',
+        'headers': {
+            'Content-Type': 'application/json'
+        }
+    }
+];
+queue.add_subscribers(subscribers, function(error, body) {});
 
-queue.add_subscribers(
-  ['http://first.endpoint.xx/process',
-   'http://second.endpoint.xx/process'],
-  function(error, body) {}
-);
-
-
-queue.rm_subscribers({url: "http://nowhere.com"}, function(error, body) {});
+queue.rm_subscribers({name: 'first'}, function(error, body) {});
 
 queue.rm_subscribers(
-  [{url: 'http://first.endpoint.xx/process'},
-   {url: 'http://second.endpoint.xx/process'}],
+  [{name: 'first'},
+   {name: 'second'}],
   function(error, body) {}
 );
+```
+
+### Replace Subscribers on a Queue
+
+Sets list of subscribers to a queue. Older subscribers will be removed.
+
+```javascript
+var subscribers = [
+    {
+        "name": "the_only",
+        "url": "http://my.over9k.host.com/push"
+    }
+];
+queue.rpl_subscribers(subscribers, function(error, body) {});
 ```
 
 --
