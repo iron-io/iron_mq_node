@@ -10,8 +10,7 @@ class Client
     new Client(_.extend({}, @api.options, {queue_name: name}))
 
   create_queue: (queue_name, options, cb) ->
-    options = prepareQueueOptions(options)
-    @api.queuesCreate(queue_name, options, (error, body) ->
+    @api.queuesCreate(queue_name, {queue: options}, (error, body) ->
       if not error?
         cb(error, body)
       else
@@ -19,8 +18,7 @@ class Client
     )
 
   update_queue: (queue_name, options, cb) ->
-    options = prepareQueueOptions(options)
-    @api.queuesUpdate(queue_name, options, (error, body) ->
+    @api.queuesUpdate(queue_name, {queue: options}, (error, body) ->
       if not error?
         cb(error, body)
       else
@@ -52,8 +50,7 @@ class Client
     )
 
   update: (options, cb) ->
-    options = prepareQueueOptions(options)
-    @api.queuesUpdate(@api.options.queue_name, options, (error, body) ->
+    @api.queuesUpdate(@api.options.queue_name, {queue: options}, (error, body) ->
       if not error?
         cb(error, body)
       else
@@ -277,26 +274,6 @@ class Client
       else
         cb(error, body)
     )
-
-  prepareQueueOptions = (options) ->
-    body = {}
-    if options['message_timeout']
-       body['message_timeout'] = options['message_timeout']
-    if options['message_expiration']
-       body['message_expiration'] = options['message_expiration']
-    if options['type']
-       body['type'] = options['type']
-    if options['alerts']
-       body['alerts'] = options['alerts']
-    push = {}
-    if options['error_queue']
-       push['error_queue'] = options['error_queue']
-    if options['subscribers']
-       push['subscribers'] = prepareSubscribers(options['subscribers'])
-    if not _.isEmpty(push)
-       body['push'] = push
-    queue = {queue: body}
-    queue
 
   prepareIdsToRemove = (options) ->
     body = {}
