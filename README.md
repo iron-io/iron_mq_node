@@ -237,20 +237,44 @@ IronMQ push queues allow you to setup a queue that will push to an endpoint, rat
 
 ### Create a Push Queue
 
-Push queues must be explicitly created. There's no changing a queue's type.
-
-`type` can be one of: `[multicast, unicast, pull]` where `multicast` and `unicast` define push queues, default is `pull`.
-
-If `push` field is defined, this queue will be created as a push queue and must contain at least one subscriber. Everything else in the push map is optional.
-
-A push queue cannot have alerts.
-
-All fields are optional.
-
 ```javascript
-subscribers=["http://endpoint1.com", "https://end.point.com/2"]
-options = {message_timeout: 60, message_expiration: 3600, type: "unicast", subscribers: subscribers}
-imq.create_queue(options, function(error, body) {})
+var options = {
+    'message_timeout': 120,
+    'message_expiration': 24 * 3600,
+    'push': {
+        'subscribers': [
+            {
+                'name': 'subscriber_name',
+                'url': 'http://rest-test.iron.io/code/200?store=key1',
+                'headers': {
+                    'Content-Type': 'application/json'
+                }
+            }
+        ],
+        'retries': 4,
+        'retries_delay': 30,
+        'error_queue': 'error_queue_name'
+    }
+};
+imq.create_queue("test_name", options, function(error, body) {})
+```
+
+**Options:**
+
+* `type`: String or symbol. Queue type. `:pull`, `:multicast`, `:unicast`. Field required and static.
+* `message_timeout`: Integer. Number of seconds before message back to queue if it will not be deleted or touched.
+* `message_expiration`: Integer. Number of seconds between message post to queue and before message will be expired.
+
+**Push queues only:**
+
+* `push: subscribers`: An array of subscriber hashes containing a `name` and a `url` required fields,
+and optional `headers` hash. `headers`'s keys are names and values are means of HTTP headers.
+This set of subscribers will replace the existing subscribers.
+To add or remove subscribers, see the add subscribers endpoint or the remove subscribers endpoint.
+See below for example json.
+* `push: retries`: How many times to retry on failure. Default is 3. Maximum is 100.
+* `push: retries_delay`: Delay between each retry in seconds. Default is 60.
+* `push: error_queue`: String. Queue name to post push errors to.
 ```
 
 ### Update a Message Queue
