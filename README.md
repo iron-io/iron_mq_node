@@ -30,6 +30,36 @@ var imq = new iron_mq.Client({token: "MY_TOKEN", project_id: "MY_PROJECT_ID", qu
 
 If no `queue_name` is specified it defaults to `default`.
 
+### Keystone Authentication
+
+#### Via Configuration File
+
+Add `keystone` section to your iron.json file:
+
+```javascript
+{
+  "project_id": "57a7b7b35e8e331d45000001",
+  "keystone": {
+    "server": "http://your.keystone.host/v2.0/",
+    "tenant": "some-group",
+    "username": "name",
+    "password": "password"
+  }
+}
+```
+
+#### In Code
+
+```javascript
+var keystone = {
+    server: "http://your.keystone.host/v2.0/",
+    tenant: "some-gorup",
+    username: "name",
+    password: "password"
+}
+var imq = new iron_mq.Client({project_id: "57a7b7b35e8e331d45000001", keystone: keystone});
+```
+
 ## Usage
 
 ### Get Queues List
