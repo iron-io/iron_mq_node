@@ -9,6 +9,22 @@ class Client
   queue: (name) ->
     new Client(_.extend({}, @api.options, {queue_name: name}))
 
+  create_queue: (queue_name, options, cb) ->
+    @api.queuesCreate(queue_name, {queue: options}, (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
+  update_queue: (queue_name, options, cb) ->
+    @api.queuesUpdate(queue_name, {queue: options}, (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
   queues: (options, cb) ->
     @api.queuesList(options, (error, body) ->
       if not error?
@@ -34,7 +50,7 @@ class Client
     )
 
   update: (options, cb) ->
-    @api.queuesUpdate(@api.options.queue_name, options, (error, body) ->
+    @api.queuesUpdate(@api.options.queue_name, {queue: options}, (error, body) ->
       if not error?
         cb(error, body)
       else
@@ -44,16 +60,25 @@ class Client
   add_alerts: (alerts, cb) ->
     unless alerts instanceof Array
       alerts = [alerts]
+    options = {queue: {alerts: alerts}}
 
-    @api.queuesAddAlerts(
-      @api.options.queue_name,
-    { alerts: alerts },
-    (error, body) ->
+    @api.queuesUpdate(@api.options.queue_name, options, (error, body) ->
       if not error?
         cb(error, body)
       else
         cb(error, body)
     )
+
+  clear_alerts: (cb) ->
+    options = {queue: {alerts: [{}]}}
+
+    @api.queuesUpdate(@api.options.queue_name, options, (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
   update_alerts: (alerts, cb) ->
     unless alerts instanceof Array
       alerts = [alerts]
@@ -97,11 +122,11 @@ class Client
     @api.queuesAddSubscribers(
       @api.options.queue_name,
       { subscribers: subscribers },
-      (error, body) ->
-        if not error?
-          cb(error, body)
-        else
-          cb(error, body)
+    (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
     )
 
   rm_subscribers: (subscribers, cb) ->
@@ -111,6 +136,20 @@ class Client
     @api.queuesRemoveSubscribers(
       @api.options.queue_name,
       { subscribers: subscribers },
+    (error, body) ->
+      if not error?
+        cb(error, body)
+      else
+        cb(error, body)
+    )
+
+  rpl_subscribers: (subscribers, cb) ->
+    unless subscribers instanceof Array
+      subscribers = [subscribers]
+
+    @api.queuesReplaceSubscribers(
+      @api.options.queue_name,
+      {subscribers: subscribers},
       (error, body) ->
         if not error?
           cb(error, body)
@@ -129,7 +168,7 @@ class Client
   post: (messages, cb) ->
     unless messages instanceof Array
       messages = [messages]
-      
+
     messages = _.map(messages, (message) ->
       if typeof(message) == 'string' then {body: message} else message
     )
@@ -148,6 +187,15 @@ class Client
       else
         cb(error, body)
     )
+
+  reserve: (options, cb) ->
+    @get_n(options, (error, body) ->
+      if not error?
+        cb(error, if (not options.n?) or options.n == 1 then body[0] else body)
+      else
+        cb(error, body)
+    )
+
 
   get_n: (options, cb) ->
     @api.messagesGet(@api.options.queue_name, options, (error, body) ->
@@ -173,16 +221,17 @@ class Client
         cb(error, body)
     )
 
-  del: (message_id, cb) ->
-    @api.messagesDelete(@api.options.queue_name, message_id, (error, body) ->
+  del: (options, cb) ->
+    @api.messagesDelete(@api.options.queue_name, options, (error, body) ->
       if not error?
         cb(error, body)
       else
         cb(error, body)
     )
 
-  del_multiple: (messages_ids, cb) ->
-    @api.messagesMultipleDelete(@api.options.queue_name, messages_ids, (error, body) ->
+  del_multiple: (options, cb) ->
+    ids = prepareIdsToRemove(options)
+    @api.messagesMultipleDelete(@api.options.queue_name, ids, (error, body) ->
       if not error?
         cb(error, body)
       else
@@ -197,16 +246,16 @@ class Client
         cb(error, body)
     )
 
-  msg_touch: (message_id, cb) ->
-    @api.messagesTouch(@api.options.queue_name, message_id, (error, body) ->
+  msg_touch: (options, cb) ->
+    @api.messagesTouch(@api.options.queue_name, options, (error, body) ->
       if not error?
         cb(error, body)
       else
         cb(error, body)
     )
 
-  msg_release: (message_id, options, cb) ->
-    @api.messagesRelease(@api.options.queue_name, message_id, options, (error, body) ->
+  msg_release: (options, cb) ->
+    @api.messagesRelease(@api.options.queue_name, options, (error, body) ->
       if not error?
         cb(error, body)
       else
@@ -228,5 +277,17 @@ class Client
       else
         cb(error, body)
     )
+
+  prepareIdsToRemove = (options) ->
+    body = {}
+    if options["ids"]
+      body["ids"] = _.map(options["ids"], (val) -> {id: val})
+    else if options["reservation_ids"]
+      body["ids"] = _.map(options["reservation_ids"], (val) -> {id: val.id, reservation_id: val.reservation_id})
+    body
+
+  prepareSubscribers = (subscribers) ->
+    values = _.map(subscribers, (val) -> {url: val})
+    values
 
 module.exports.Client = Client

@@ -30,6 +30,36 @@ var imq = new iron_mq.Client({token: "MY_TOKEN", project_id: "MY_PROJECT_ID", qu
 
 If no `queue_name` is specified it defaults to `default`.
 
+### Keystone Authentication
+
+#### Via Configuration File
+
+Add `keystone` section to your iron.json file:
+
+```javascript
+{
+  "project_id": "57a7b7b35e8e331d45000001",
+  "keystone": {
+    "server": "http://your.keystone.host/v2.0/",
+    "tenant": "some-group",
+    "username": "name",
+    "password": "password"
+  }
+}
+```
+
+#### In Code
+
+```javascript
+var keystone = {
+    server: "http://your.keystone.host/v2.0/",
+    tenant: "some-gorup",
+    username: "name",
+    password: "password"
+}
+var imq = new iron_mq.Client({project_id: "57a7b7b35e8e331d45000001", keystone: keystone});
+```
+
 ## Usage
 
 ### Get Queues List
@@ -40,8 +70,10 @@ imq.queues(options, function(error, body) {});
 
 **Options:**
 
-* `page`: The 0-based page to view. The default is 0.
-* `per_page`: The number of queues to return per page. The default is 30, the maximum is 100.
+* `per_page` - number of elements in response. The default is 30, the maximum is 100.
+* `previous` - this is the last queue on the previous page, it will start from the next one. If queue with specified 
+               name doesn’t exist result will contain first per_page queues that lexicographically greater than previous
+* `prefix` - an optional queue prefix to search on. e.g., `prefix=ca` could return queues `["cars", "cats", etc.]`
 
 --
 
@@ -106,12 +138,10 @@ Default is 604,800 seconds (7 days). Maximum is 2,592,000 seconds (30 days).
 
 --
 
-### Get a Messages off a Queue
+### Reserve/Get Messages from a Queue
 
 ```javascript
-queue.get(options, function(error, body) {});
-
-queue.get_n(options, function(error, body) {});
+queue.reserve(options, function(error, body) {});
 ```
 
 **Options:**
@@ -123,11 +153,10 @@ You must delete the message from the queue to ensure it does not go back onto th
 If not set, value from POST is used. Default is 60 seconds. Minimum is 30 seconds.
 Maximum is 86,400 seconds (24 hours).
 
-In `get` function when `n` parameter is specified and greater than 1 method returns list of messages.
-Otherwise, message's object will be returned. `get_n` function returns `Array` of messages even if `n` option
-is set to 1 or omitted.
+In `reserve` function when `n` parameter is specified and greater than 1 method returns list of messages.
+Otherwise, message's object will be returned. 
 
-When you pop/get a message from the queue, it is no longer on the queue but it still exists within the system.
+When you pop/reserve a message from the queue, it is no longer on the queue but it still exists within the system.
 You have to explicitly delete the message or else it will go back onto the queue after the `timeout`.
 
 --
@@ -165,7 +194,8 @@ is set to 1 or omitted.
 Touching a reserved message extends its timeout by the duration specified when the message was created, which is 60 seconds by default.
 
 ```javascript
-queue.msg_touch(message_id, function(error, body) {});
+var options = {message_id: "xxxxxxx", reservation_id: "xxxxxxx"};
+queue.msg_touch(options, function(error, body) {});
 ```
 
 --
@@ -173,7 +203,8 @@ queue.msg_touch(message_id, function(error, body) {});
 ### Release Message
 
 ```javascript
-queue.msg_release(message_id, options, function(error, body) {});
+var options = {message_id: "xxxxxxx", reservation_id: "xxxxxxx", delay: 4600};
+queue.msg_release(options, function(error, body) {});
 ```
 
 **Options:**
@@ -186,10 +217,30 @@ Default is 0 seconds. Maximum is 604,800 seconds (7 days).
 ### Delete a Message from a Queue
 
 ```javascript
-queue.del(message_id, function(error, body) {});
+queue.del({message_id: 'xxxxxxxxx'}, function(error, body) {});
 ```
 
 Be sure to delete a message from the queue when you're done with it.
+
+```javascript
+var options = {message_id: 'xxxxxxxxx', reservation_id: 'xxxxxxxxx'};
+queue.del(options, function(error, body) {});
+```
+
+To delete reserved message `reservation_id` should be passed to the method. 
+
+--
+
+Delete multiple messages from a Queue after reserving or posting
+
+```javascript
+queue.reserve({n:3}, function(error, messages) {
+   queue.del_multiple({reservation_ids: messages}, function(error,body){});
+});
+queue.post(["hello", "IronMQ"], function(error, ids) {
+   queue.del_multiple({ids: ids}, function(error,body){});
+});
+```
 
 --
 
@@ -214,35 +265,54 @@ queue.del_queue(function(error, body) {});
 IronMQ push queues allow you to setup a queue that will push to an endpoint, rather than having to poll the endpoint. 
 [Here's the announcement for an overview](http://blog.iron.io/2013/01/ironmq-push-queues-reliable-message.html). 
 
-### Update a Message Queue
+### Create a Push Queue
 
 ```javascript
-queue.update(options, function(error, body) {});
+var options = {
+    'message_timeout': 120,
+    'message_expiration': 24 * 3600,
+    'push': {
+        'subscribers': [
+            {
+                'name': 'subscriber_name',
+                'url': 'http://rest-test.iron.io/code/200?store=key1',
+                'headers': {
+                    'Content-Type': 'application/json'
+                }
+            }
+        ],
+        'retries': 4,
+        'retries_delay': 30,
+        'error_queue': 'error_queue_name'
+    }
+};
+imq.create_queue("test_name", options, function(error, body) {})
 ```
 
-**The following options are all related to Push Queues:**
+**Options:**
 
-* `subscribers`: An array of subscriber hashes containing a “url” field.
+* `type`: String or symbol. Queue type. `:pull`, `:multicast`, `:unicast`. Field required and static.
+* `message_timeout`: Integer. Number of seconds before message back to queue if it will not be deleted or touched.
+* `message_expiration`: Integer. Number of seconds between message post to queue and before message will be expired.
+
+**Push queues only:**
+
+* `push: subscribers`: An array of subscriber hashes containing a `name` and a `url` required fields,
+and optional `headers` hash. `headers`'s keys are names and values are means of HTTP headers.
 This set of subscribers will replace the existing subscribers.
 To add or remove subscribers, see the add subscribers endpoint or the remove subscribers endpoint.
 See below for example json.
-* `push_type`: Either `multicast` to push to all subscribers or `unicast` to push to one and only one subscriber.
-Default is `multicast`.
-* `retries`: How many times to retry on failure. Default is 3. Maximum is 100.
-* `retries_delay`: Delay between each retry in seconds. Default is 60.
+* `push: retries`: How many times to retry on failure. Default is 3. Maximum is 100.
+* `push: retries_delay`: Delay between each retry in seconds. Default is 60.
+* `push: error_queue`: String. Queue name to post push errors to.
 
-**Example:**
+
+### Update a Message Queue
+
+Same as create queue
 
 ```javascript
-queue.update(
-  {push_type: "multicast",
-   retries: 5,
-   subscribers: [
-     {url: "http://my.first.end.point/push"},
-     {url: "http://my.second.end.point/push"}
-   ]},
-  function(error, body) {}
-);
+queue.update(options, function(error, body) {});
 ```
 
 --
@@ -250,22 +320,45 @@ queue.update(
 ### Add/Remove Subscribers on a Queue
 
 ```javascript
-queue.add_subscribers({url:  "http://nowhere.com"}, function(error, body) {});
+var subscribers = [
+    {
+        'name': 'first',
+        'url': 'http://first.endpoint.xx/process',
+        'headers': {
+            'Content-Type': 'application/json'
+        }
+    },
+    {
+        'name': 'second',
+        'url': 'http://second.endpoint.xx/process',
+        'headers': {
+            'Content-Type': 'application/json'
+        }
+    }
+];
+queue.add_subscribers(subscribers, function(error, body) {});
 
-queue.add_subscribers(
-  [{url: 'http://first.endpoint.xx/process'},
-   {url: 'http://second.endpoint.xx/process'}],
-  function(error, body) {}
-);
-
-
-queue.rm_subscribers({url: "http://nowhere.com"}, function(error, body) {});
+queue.rm_subscribers({name: 'first'}, function(error, body) {});
 
 queue.rm_subscribers(
-  [{url: 'http://first.endpoint.xx/process'},
-   {url: 'http://second.endpoint.xx/process'}],
+  [{name: 'first'},
+   {name: 'second'}],
   function(error, body) {}
 );
+```
+
+### Replace Subscribers on a Queue
+
+Sets list of subscribers to a queue. Older subscribers will be removed.
+
+```javascript
+var subscribers = [
+    {
+        "name": "the_only",
+        "url": "http://my.over9k.host.com/push"
+    }
+];
+queue.rpl_subscribers(subscribers, function(error, body) {});
 ```
 
 --
