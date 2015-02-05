@@ -26,6 +26,9 @@ class APIClient extends ironCore.Client
   url: ->
     super() + @options.api_version.toString() + "/projects/#{@options.project_id}/queues"
 
+  headers: ->
+    _.extend({}, super(), {'Authorization': "OAuth #{@options.token}"})
+
   queuesList: (options, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
         
