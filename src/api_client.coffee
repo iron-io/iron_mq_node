@@ -166,14 +166,16 @@ class APIClient extends ironCore.Client
       parseResponseBind(error, response, body, cb)
     )
 
-  messagesTouch: (queue_name, message_id, reservation_id, cb) ->
+  messageTouch: (queue_name, message_id, reservation_id, cb) ->
+    body = _.pick(options, 'timeout')
+    body['reservation_id'] = reservation_id;
     parseResponseBind = _.bind(@parseResponse, @)
 
-    @post("/#{queue_name}/messages/#{message_id}/touch", {reservation_id: reservation_id}, (error, response, body) ->
+    @post("/#{queue_name}/messages/#{message_id}/touch", body, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
-  messagesRelease: (queue_name, message_id, reservation_id, options, cb) ->
+  messageRelease: (queue_name, message_id, reservation_id, options, cb) ->
     body = _.pick(options, 'delay');
     body['reservation_id'] = reservation_id;
     parseResponseBind = _.bind(@parseResponse, @)
