@@ -196,7 +196,7 @@ Touching a reserved message extends its timeout by the duration specified when t
 ```javascript
 var message_id = "xxxxxxx";
 var reservation_id = "xxxxxxx";
-queue.msg_touch(message_id, reservation_id, function(error, body) {});
+queue.msg_touch(message_id, reservation_id, {timeout: 120}, function(error, body) {});
 ```
 
 --
