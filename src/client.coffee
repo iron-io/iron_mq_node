@@ -200,7 +200,7 @@ class Client
   get_n: (options, cb) ->
     @api.messagesGet(@api.options.queue_name, options, (error, body) ->
       if not error?
-        cb(error, body.messages)
+        cb(error, body.messages or [])
       else
         cb(error, body)
     )
