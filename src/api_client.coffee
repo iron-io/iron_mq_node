@@ -166,7 +166,7 @@ class APIClient extends ironCore.Client
       parseResponseBind(error, response, body, cb)
     )
 
-  messageTouch: (queue_name, message_id, reservation_id, cb) ->
+  messageTouch: (queue_name, message_id, reservation_id, options, cb) ->
     body = _.pick(options, 'timeout')
     body['reservation_id'] = reservation_id;
     parseResponseBind = _.bind(@parseResponse, @)

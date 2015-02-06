@@ -246,7 +246,7 @@ class Client
         cb(error, body)
     )
 
-  msg_touch: (message_id, reservation_id, cb) ->
+  msg_touch: (message_id, reservation_id, options, cb) ->
     @api.messageTouch(@api.options.queue_name, message_id, reservation_id, options, (error, body) ->
       if not error?
         cb(error, body)
