@@ -247,7 +247,7 @@ class Client
     )
 
   msg_touch: (message_id, reservation_id, cb) ->
-    @api.messagesTouch(@api.options.queue_name, message_id, reservation_id, (error, body) ->
+    @api.messageTouch(@api.options.queue_name, message_id, reservation_id, options, (error, body) ->
       if not error?
         cb(error, body)
       else
@@ -255,7 +255,7 @@ class Client
     )
 
   msg_release: (message_id, reservation_id, options, cb) ->
-    @api.messagesRelease(@api.options.queue_name, message_id, reservation_id, options, (error, body) ->
+    @api.messageRelease(@api.options.queue_name, message_id, reservation_id, options, (error, body) ->
       if not error?
         cb(error, body)
       else
