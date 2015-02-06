@@ -144,7 +144,7 @@ class APIClient extends ironCore.Client
       parseResponseBind(error, response, body['message'], cb)
     )
 
-  messagesDelete: (queue_name, options, cb) ->
+  messagesDelete: (queue_name, message_id, options, cb) ->
     body = _.pick(options, 'reservation_id')
     parseResponseBind = _.bind(@parseResponse, @)
 
@@ -166,19 +166,19 @@ class APIClient extends ironCore.Client
       parseResponseBind(error, response, body, cb)
     )
 
-  messagesTouch: (queue_name, message_id, cb) ->
-    body = _.pick(options, 'reservation_id')
+  messagesTouch: (queue_name, message_id, reservation_id, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
 
-    @post("/#{queue_name}/messages/#{options.message_id}/touch", body, (error, response, body) ->
+    @post("/#{queue_name}/messages/#{message_id}/touch", {reservation_id: reservation_id}, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
-  messagesRelease: (queue_name, message_id, options, cb) ->
-    body = _.pick(options, 'reservation_id', 'delay')
+  messagesRelease: (queue_name, message_id, reservation_id, options, cb) ->
+    body = _.pick(options, 'delay');
+    body['reservation_id'] = reservation_id;
     parseResponseBind = _.bind(@parseResponse, @)
 
-    @post("/#{queue_name}/messages/#{options.message_id}/release", body, (error, response, body) ->
+    @post("/#{queue_name}/messages/#{message_id}/release", body, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
