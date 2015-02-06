@@ -10,7 +10,7 @@ much as possible so if you see an option in the API docs, you can use it in the 
 1\. Install the node module:
 
 ```
-npm install iron_mq
+npm install "git://github.com/iron-io/iron_mq_node#v3"
 ```
 
 2\. [Setup your Iron.io credentials](http://dev.iron.io/mq/reference/configuration/)
@@ -194,8 +194,9 @@ is set to 1 or omitted.
 Touching a reserved message extends its timeout by the duration specified when the message was created, which is 60 seconds by default.
 
 ```javascript
-var options = {message_id: "xxxxxxx", reservation_id: "xxxxxxx"};
-queue.msg_touch(options, function(error, body) {});
+var message_id = "xxxxxxx";
+var reservation_id = "xxxxxxx";
+queue.msg_touch(message_id, reservation_id, {timeout: 120}, function(error, body) {});
 ```
 
 --
@@ -203,8 +204,7 @@ queue.msg_touch(options, function(error, body) {});
 ### Release Message
 
 ```javascript
-var options = {message_id: "xxxxxxx", reservation_id: "xxxxxxx", delay: 4600};
-queue.msg_release(options, function(error, body) {});
+queue.msg_release(message_id, reservation_id, {delay: 4600}, function(error, body) {});
 ```
 
 **Options:**
@@ -216,19 +216,18 @@ Default is 0 seconds. Maximum is 604,800 seconds (7 days).
 
 ### Delete a Message from a Queue
 
-```javascript
-queue.del({message_id: 'xxxxxxxxx'}, function(error, body) {});
-```
-
 Be sure to delete a message from the queue when you're done with it.
 
 ```javascript
-var options = {message_id: 'xxxxxxxxx', reservation_id: 'xxxxxxxxx'};
-queue.del(options, function(error, body) {});
+queue.del(message_id, {}, function(error, body) {});
 ```
+--
 
-To delete reserved message `reservation_id` should be passed to the method. 
+To delete a reserved message `reservation_id` should be passed to the method.
 
+```javascript
+queue.del(message_id, {reservation_id: 'xxxxxxxxx'}, function(error, body) {});
+```
 --
 
 Delete multiple messages from a Queue after reserving or posting

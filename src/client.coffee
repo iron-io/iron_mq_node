@@ -221,8 +221,8 @@ class Client
         cb(error, body)
     )
 
-  del: (options, cb) ->
-    @api.messagesDelete(@api.options.queue_name, options, (error, body) ->
+  del: (message_id, options, cb) ->
+    @api.messagesDelete(@api.options.queue_name, message_id, options, (error, body) ->
       if not error?
         cb(error, body)
       else
@@ -246,16 +246,16 @@ class Client
         cb(error, body)
     )
 
-  msg_touch: (options, cb) ->
-    @api.messagesTouch(@api.options.queue_name, options, (error, body) ->
+  msg_touch: (message_id, reservation_id, options, cb) ->
+    @api.messageTouch(@api.options.queue_name, message_id, reservation_id, options, (error, body) ->
       if not error?
         cb(error, body)
       else
         cb(error, body)
     )
 
-  msg_release: (options, cb) ->
-    @api.messagesRelease(@api.options.queue_name, options, (error, body) ->
+  msg_release: (message_id, reservation_id, options, cb) ->
+    @api.messageRelease(@api.options.queue_name, message_id, reservation_id, options, (error, body) ->
       if not error?
         cb(error, body)
       else
