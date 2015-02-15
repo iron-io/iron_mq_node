@@ -270,13 +270,8 @@ class Client
         cb(error, body)
     )
 
-  del_msg_push_status: (message_id, subscriber_id, cb) ->
-    @api.messagesPushStatusDelete(@api.options.queue_name, message_id, subscriber_id, (error, body) ->
-      if not error?
-        cb(error, body)
-      else
-        cb(error, body)
-    )
+  del_msg_push_status: (message_id, reservation_id, subscriber_name, cb) ->
+    @del message_id, {reservation_id: reservation_id, subscriber_name: subscriber_name}, cb
 
   prepareIdsToRemove = (options) ->
     body = {}
@@ -285,9 +280,5 @@ class Client
     else if options["reservation_ids"]
       body["ids"] = _.map(options["reservation_ids"], (val) -> {id: val.id, reservation_id: val.reservation_id})
     body
-
-  prepareSubscribers = (subscribers) ->
-    values = _.map(subscribers, (val) -> {url: val})
-    values
 
 module.exports.Client = Client

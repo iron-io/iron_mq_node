@@ -145,7 +145,7 @@ class APIClient extends ironCore.Client
     )
 
   messagesDelete: (queue_name, message_id, options, cb) ->
-    body = _.pick(options, 'reservation_id')
+    body = _.pick(options, 'reservation_id', 'subscriber_name')
     parseResponseBind = _.bind(@parseResponse, @)
 
     @delete("/#{queue_name}/messages/#{message_id}", body, (error, response, body) ->
@@ -188,13 +188,6 @@ class APIClient extends ironCore.Client
     parseResponseBind = _.bind(@parseResponse, @)
 
     @get("/#{queue_name}/messages/#{message_id}/subscribers", {}, (error, response, body) ->
-      parseResponseBind(error, response, body, cb)
-    )
-
-  messagesPushStatusDelete: (queue_name, message_id, subscriber_id, cb) ->
-    parseResponseBind = _.bind(@parseResponse, @)
-
-    @delete("/#{queue_name}/messages/#{message_id}/subscribers/#{subscriber_id}", {}, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
