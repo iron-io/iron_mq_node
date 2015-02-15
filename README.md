@@ -444,7 +444,8 @@ queue.msg_push_statuses(message_id, function(error, body) {});
 ### Acknowledge / Delete Message Push Status
 
 ```javascript
-queue.del_msg_push_status(message_id, subscriber_id, function(error, body) {});
+queue.del_msg_push_status(
+  message_id, reservation_id, subscriber_name, function(error, body) {});
 ```
 
 --
