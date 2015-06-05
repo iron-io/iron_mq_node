@@ -6,8 +6,9 @@ _ = require('underscore')
 ironCore = require('iron_core');
 
 class APIClient extends ironCore.Client
-  AWS_US_EAST_HOST: 'mq-aws-us-east-1.iron.io'
-  RACKSPACE_HOST: 'mq-rackspace-dfw.iron.io'
+  AWS_US_EAST_HOST: 'mq-aws-us-east-1-1.iron.io'
+  # APIClient.prototype.RACKSPACE_HOST = 'mq-rackspace-ord.iron.io';
+  # RACKSPACE_HOST: 'mq-rackspace-dfw.iron.io'
 
   constructor: (options) ->
     defaultOptions =
@@ -31,7 +32,7 @@ class APIClient extends ironCore.Client
 
   queuesList: (options, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
-        
+
     @get("", options, (error, response, body) ->
       body = JSON.parse(body)
       parseResponseBind(error, response, body['queues'], cb)
@@ -39,7 +40,7 @@ class APIClient extends ironCore.Client
 
   queuesGet: (queue_name, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
-        
+
     @get("/#{queue_name}", {}, (error, response, body) ->
       body = JSON.parse(body)
       parseResponseBind(error, response, body['queue'], cb)
@@ -124,21 +125,21 @@ class APIClient extends ironCore.Client
 
   messagesPost: (queue_name, messages, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
-        
+
     @post("/#{queue_name}/messages", {messages: messages}, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
   messagesGet: (queue_name, options, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
-        
+
     @post("/#{queue_name}/reservations", options, (error, response, body) ->
       parseResponseBind(error, response, body, cb)
     )
 
   messagesGetById: (queue_name, message_id, cb) ->
     parseResponseBind = _.bind(@parseResponse, @)
-        
+
     @get("/#{queue_name}/messages/#{message_id}", {}, (error, response, body) ->
       body = JSON.parse(body)
       parseResponseBind(error, response, body['message'], cb)
