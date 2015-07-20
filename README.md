@@ -78,7 +78,7 @@ queue.post(messages, function(error, body) {});
 queue.post("hello IronMQ!", function(error, body) {});
 // with options
 queue.post({body: "hello IronMQ", delay: 30}, function(error, body) {});
-// or multiple messages
+// or batch post multiple messages
 queue.post(["hello", "IronMQ"], function(error, body) {});
 // messages with options
 queue.post(
@@ -188,6 +188,14 @@ Default is 0 seconds. Maximum is 604,800 seconds (7 days).
 ```javascript
 queue.del(message_id, function(error, body) {});
 ```
+to batch delete multiple messages from a queue pass multiple message ids in an array to the del_multiple function
+
+```javascript
+queue.del_multiple([message.id, message.id], function(error, body) {});
+// OR
+queue.del_multiple(["abdc1234", "abdc12345"], function(error, body) {});
+```
+
 
 Be sure to delete a message from the queue when you're done with it.
 
@@ -211,8 +219,8 @@ queue.del_queue(function(error, body) {});
 
 ## Push Queues
 
-IronMQ push queues allow you to setup a queue that will push to an endpoint, rather than having to poll the endpoint. 
-[Here's the announcement for an overview](http://blog.iron.io/2013/01/ironmq-push-queues-reliable-message.html). 
+IronMQ push queues allow you to setup a queue that will push to an endpoint, rather than having to poll the endpoint.
+[Here's the announcement for an overview](http://blog.iron.io/2013/01/ironmq-push-queues-reliable-message.html).
 
 ### Update a Message Queue
 
