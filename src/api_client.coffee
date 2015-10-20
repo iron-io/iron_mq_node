@@ -42,8 +42,11 @@ class APIClient extends ironCore.Client
     parseResponseBind = _.bind(@parseResponse, @)
 
     @get("/#{queue_name}", {}, (error, response, body) ->
-      body = JSON.parse(body)
-      parseResponseBind(error, response, body['queue'], cb)
+      try
+        body = JSON.parse(body)
+        parseResponseBind(error, response, body['queue'], cb)
+      catch e
+        parseResponseBind(e, response, null, cb)
     )
 
   queuesClear: (queue_name, cb) ->
