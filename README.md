@@ -1,7 +1,7 @@
 IronMQ Node.js Client
 -------------
 
-The [full API documentation is here](http://dev.iron.io/mq/reference/api/) and this client tries to stick to the API as
+The [full API documentation is here](http://dev.iron.io/mq/3/) and this client tries to stick to the API as
 much as possible so if you see an option in the API docs, you can use it in the methods below.
 
 
