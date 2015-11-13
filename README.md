@@ -10,7 +10,7 @@ much as possible so if you see an option in the API docs, you can use it in the 
 1\. Install the node module:
 
 ```
-npm install "git://github.com/iron-io/iron_mq_node#v3"
+npm install iron_mq
 ```
 
 2\. [Setup your Iron.io credentials](http://dev.iron.io/mq/reference/configuration/)
