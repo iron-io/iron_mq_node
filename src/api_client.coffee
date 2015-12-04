@@ -34,8 +34,11 @@ class APIClient extends ironCore.Client
     parseResponseBind = _.bind(@parseResponse, @)
 
     @get("", options, (error, response, body) ->
-      body = JSON.parse(body)
-      parseResponseBind(error, response, body['queues'], cb)
+      try
+        body = JSON.parse(body)
+        parseResponseBind(error, response, body['queues'], cb)
+      catch e
+        parseResponseBind(e, response, null, cb)
     )
 
   queuesGet: (queue_name, cb) ->
@@ -144,8 +147,11 @@ class APIClient extends ironCore.Client
     parseResponseBind = _.bind(@parseResponse, @)
 
     @get("/#{queue_name}/messages/#{message_id}", {}, (error, response, body) ->
-      body = JSON.parse(body)
-      parseResponseBind(error, response, body['message'], cb)
+      try
+        body = JSON.parse(body)
+        parseResponseBind(error, response, body['message'], cb)
+      catch e
+        parseResponseBind(e, response, null, cb)
     )
 
   messagesDelete: (queue_name, message_id, options, cb) ->
