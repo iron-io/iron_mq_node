@@ -455,7 +455,7 @@ queue.update({push_type: "pull"}, function(error, body) {});
 
 ## Further Links
 
-* [IronMQ Overview](http://dev.iron.io/mq/)
+* [IronMQ Overview](http://dev.iron.io/mq/3/)
 * [IronMQ REST/HTTP API](http://dev.iron.io/mq/reference/api/)
 * [Push Queues](http://dev.iron.io/mq/reference/push_queues/)
 * [Other Client Libraries](http://dev.iron.io/mq/libraries/)
