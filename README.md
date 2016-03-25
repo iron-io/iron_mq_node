@@ -30,6 +30,8 @@ var imq = new iron_mq.Client({token: "MY_TOKEN", project_id: "MY_PROJECT_ID", qu
 
 If no `queue_name` is specified it defaults to `default`.
 
+**The API version for IronMQ v3 is 3.:** The API version for IronWorker is 2. The API version for IronMQ v2 is 1.
+
 ### Keystone Authentication
 
 #### Via Configuration File
