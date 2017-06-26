@@ -13,7 +13,7 @@ much as possible so if you see an option in the API docs, you can use it in the 
 npm install iron_mq
 ```
 
-2\. [Setup your Iron.io credentials](http://dev.iron.io/mq/reference/configuration/)
+2\. [Setup your Iron.io credentials](http://dev.iron.io/mq/3/reference/configuration/)
 
 3\. Create an IronMQ Client object:
 
@@ -456,10 +456,10 @@ queue.update({push_type: "pull"}, function(error, body) {});
 ## Further Links
 
 * [IronMQ Overview](http://dev.iron.io/mq/3/)
-* [IronMQ REST/HTTP API](http://dev.iron.io/mq/reference/api/)
-* [Push Queues](http://dev.iron.io/mq/reference/push_queues/)
-* [Other Client Libraries](http://dev.iron.io/mq/libraries/)
-* [Live Chat, Support & Fun](http://get.iron.io/chat)
+* [IronMQ REST/HTTP API](http://dev.iron.io/mq/3/reference/api/)
+* [Push Queues](http://dev.iron.io/mq/3/reference/push_queues/)
+* [Other Client Libraries](http://dev.iron.io/mq/3/libraries/)
+* [Support](https://iron.io/support/)
 
 -------------
 © 2011 - 2013 Iron.io Inc. All Rights Reserved.
