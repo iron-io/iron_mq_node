@@ -106,6 +106,8 @@ If a queue does not exist, it will be created upon the first posting of a messag
 ```javascript
 queue.post(messages, function(error, body) {});
 
+//without callback
+queue.post("hello IronMQ!");
 // single message
 queue.post("hello IronMQ!", function(error, body) {});
 // with options
