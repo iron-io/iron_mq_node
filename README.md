@@ -1,7 +1,7 @@
 IronMQ Node.js Client
 -------------
 
-The [full API documentation is here](http://dev.iron.io/mq/3/) and this client tries to stick to the API as
+The full API documentation is [here](http://dev.iron.io/mq/3/) and this client tries to stick to the API as
 much as possible so if you see an option in the API docs, you can use it in the methods below.
 
 
@@ -13,7 +13,7 @@ much as possible so if you see an option in the API docs, you can use it in the 
 npm install iron_mq
 ```
 
-2\. [Setup your Iron.io credentials](http://dev.iron.io/mq/3/reference/configuration/)
+2\. Setup your [Iron.io credentials](http://dev.iron.io/mq/3/reference/configuration/)
 
 3\. Create an IronMQ Client object:
 
@@ -29,36 +29,6 @@ var imq = new iron_mq.Client({token: "MY_TOKEN", project_id: "MY_PROJECT_ID", qu
 ```
 
 If no `queue_name` is specified it defaults to `default`.
-
-### Keystone Authentication
-
-#### Via Configuration File
-
-Add `keystone` section to your iron.json file:
-
-```javascript
-{
-  "project_id": "57a7b7b35e8e331d45000001",
-  "keystone": {
-    "server": "http://your.keystone.host/v2.0/",
-    "tenant": "some-group",
-    "username": "name",
-    "password": "password"
-  }
-}
-```
-
-#### In Code
-
-```javascript
-var keystone = {
-    server: "http://your.keystone.host/v2.0/",
-    tenant: "some-gorup",
-    username: "name",
-    password: "password"
-}
-var imq = new iron_mq.Client({project_id: "57a7b7b35e8e331d45000001", keystone: keystone});
-```
 
 ## Usage
 
@@ -376,16 +346,6 @@ queue.del_msg_push_status(
 
 --
 
-### Revert Queue Back to Pull Queue
-
-If you want to revert you queue just update `push_type` to `"pull"`.
-
-```javascript
-queue.update({push_type: "pull"}, function(error, body) {});
-```
-
---
-
 ## Further Links
 
 * [IronMQ Overview](http://dev.iron.io/mq/3/)
@@ -395,4 +355,4 @@ queue.update({push_type: "pull"}, function(error, body) {});
 * [Support](https://iron.io/support/)
 
 -------------
-© 2011 - 2013 Iron.io Inc. All Rights Reserved.
+© 2011 - 2025 Iron.io Inc. All Rights Reserved.
